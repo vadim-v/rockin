@@ -16,7 +16,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc "Create a database for this application."
     task :create_database, roles: :db, only: {primary: true} do
       run %Q{#{sudo} -u postgres psql -c "create user #{postgresql_user} with password '#{postgresql_password}';"}
-      run %Q{#{sudo} -u postgres psql -c "create database #{postgresql_database} owner #{postgresql_user} encoding = 'UTF8';"}
+      run %Q{#{sudo} -u postgres psql -c "create database #{postgresql_database} owner #{postgresql_user} encoding = 'UTF8' LC_CTYPE = 'C' LC_COLLATE = 'C' tablespace = pg_default template = template0;"}
     end
     if database.eql?("postgresql")
       after "deploy:setup", "postgresql:create_database"
